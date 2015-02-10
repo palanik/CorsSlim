@@ -1,6 +1,30 @@
 [Cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) (CORS) Middleware for PHP [Slim Framework](http://www.slimframework.com/).
 
 ## Usage ##
+### Composer Autoloader ###
+
+#### Install with [Composer](https://packagist.org/packages/palanik/corsslim) ####
+1. Update your `composer.json` to require `palanik/corsslim` package.
+2. Run `composer install` to add CorsSlim your vendor folder.
+```json
+{
+  "require": {
+    "palanik/corsslim": "*"
+  }
+}
+```
+#### Autoloading ####
+```php
+<?php
+require ('./vendor/autoload.php');
+
+$app = new \Slim\Slim();
+
+$app->add(new \CorsSlim\CorsSlim());
+?>
+```
+
+### Custom Load ###
 ```php
 <?php
 \Slim\Slim::registerAutoLoader();
