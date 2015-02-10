@@ -6,16 +6,22 @@
         "cors",
         "slimphp",
         "slim",
-        "cross-origin"
+        "cross-origin",
+        "preflight"
     ],
-    "require": {
-        "slim/slim": "2.4.0"
-    },
     "license": "MIT",
     "homepage": "https://github.com/palanik/CorsSlim",
     "authors": [
         {
             "name": "palanik"
         }
-    ]
+    ],
+    "require": {
+        "slim/slim": "2.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CorsSlim\\": "."
+        }
+    }
 }
