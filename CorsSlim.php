@@ -86,7 +86,9 @@ class CorsSlim extends \Slim\Middleware {
 
     public function call() {
         $this->setCorsHeaders($this->app);
-        $this->next->call();
+        if(!$this->app->request->isOptions()) {
+            $this->next->call();
+        }
     }
 }
 ?>
