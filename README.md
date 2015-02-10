@@ -1,4 +1,10 @@
+CorsSlim
+========
+
 [Cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) (CORS) Middleware for PHP [Slim Framework](http://www.slimframework.com/).
+
+[![Latest Stable Version](https://poser.pugx.org/palanik/corsslim/v/stable.svg)](https://packagist.org/packages/palanik/corsslim)
+[![License](https://poser.pugx.org/palanik/corsslim/license.svg)](https://github.com/palanik/CorsSlim/blob/master/LICENSE)
 
 ## Usage ##
 ### Composer Autoloader ###
