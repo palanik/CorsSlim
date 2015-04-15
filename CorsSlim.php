@@ -7,7 +7,8 @@ class CorsSlim extends \Slim\Middleware {
 
     public function __construct($settings = array()) {
         $this->settings = array_merge(array(
-                'origin' => '*'    // Wide Open!
+                'origin' => '*',    // Wide Open!
+                'allowMethods' => 'GET,HEAD,PUT,POST,DELETE'
                 ), $settings);
     }
 
@@ -76,12 +77,20 @@ class CorsSlim extends \Slim\Middleware {
         $req = $app->request();
         $rsp = $app->response();
 
-        $this->setOrigin($req, $rsp);
-        $this->setExposeHeaders($req, $rsp);
-        $this->setMaxAge($req, $rsp);
-        $this->setAllowCredentials($req, $rsp);
-        $this->setAllowMethods($req, $rsp);
-        $this->setAllowHeaders($req, $rsp);
+        // http://www.html5rocks.com/static/images/cors_server_flowchart.png
+        // Pre-flight
+        if ($this->app->request->isOptions()) {
+            $this->setOrigin($req, $rsp);
+            $this->setMaxAge($req, $rsp);
+            $this->setAllowCredentials($req, $rsp);
+            $this->setAllowMethods($req, $rsp);
+            $this->setAllowHeaders($req, $rsp);
+        }
+        else {
+            $this->setOrigin($req, $rsp);
+            $this->setExposeHeaders($req, $rsp);
+            $this->setAllowCredentials($req, $rsp);
+        }
     }
 
     public function call() {
