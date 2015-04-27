@@ -79,7 +79,7 @@ class CorsSlim extends \Slim\Middleware {
 
         // http://www.html5rocks.com/static/images/cors_server_flowchart.png
         // Pre-flight
-        if ($this->app->request->isOptions()) {
+        if ($app->request->isOptions()) {
             $this->setOrigin($req, $rsp);
             $this->setMaxAge($req, $rsp);
             $this->setAllowCredentials($req, $rsp);
