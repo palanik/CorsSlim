@@ -99,5 +99,13 @@ class CorsSlim extends \Slim\Middleware {
             $this->next->call();
         }
     }
+
+    public static function routeMiddleware($settings = array()) {
+        $cors = new CorsSlim($settings);
+        return function() use ($cors) {
+            $app = \Slim\Slim::getInstance();
+            $cors->setCorsHeaders($app);
+        };
+    }
 }
 ?>
