@@ -84,7 +84,7 @@ $app->get('/item/:id',
 ?>
 ```
 
-Also with custom [options](#Options).
+Also with custom [options](#options).
 ```php
 <?php
 require ('./vendor/autoload.php');
