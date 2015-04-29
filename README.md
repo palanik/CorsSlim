@@ -64,6 +64,43 @@ $corsOptions = array(
 $cors = new \CorsSlim\CorsSlim($corsOptions);
 ```
 
+## Route Middleware ##
+##### *New* #####
+You can now enable cors selectively for individual routes. 
+
+Use the static method `routeMiddleware` to create and add cors middleware to specific routes.
+
+```php
+<?php
+require ('./vendor/autoload.php');
+$app = new \Slim\Slim();
+
+$app->get('/item/:id', 
+          \CorsSlim\CorsSlim::routeMiddleware(), 
+          function ($name) use ($app) {
+            ...
+          }
+        );
+?>
+```
+
+Also with custom [options](#Options).
+```php
+<?php
+require ('./vendor/autoload.php');
+$app = new \Slim\Slim();
+
+$corsOptions = array("origin" => "*");
+$app->post('/item', 
+          \CorsSlim\CorsSlim::routeMiddleware($corsOptions), 
+          function ($name) use ($app) {
+            ...
+          }
+        );
+
+?>
+```
+
 ## License ##
 
   [MIT](LICENSE)
