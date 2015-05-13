@@ -91,7 +91,7 @@ require ('./vendor/autoload.php');
 $app = new \Slim\Slim();
 
 $corsOptions = array("origin" => "*");
-$app->post('/item', 
+$app->get('/item/:id', 
           \CorsSlim\CorsSlim::routeMiddleware($corsOptions), 
           function ($name) use ($app) {
             ...
@@ -101,6 +101,26 @@ $app->post('/item',
 ?>
 ```
 
+For [Preflighted requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Preflighted_requests), provide `OPTIONS` implementation for the corresponding routes.
+
+```php
+<?php
+require ('./vendor/autoload.php');
+$app = new \Slim\Slim();
+
+$app->options('/item', 
+          \CorsSlim\CorsSlim::routeMiddleware(), 
+          function ($name) use ($app) {}
+        );
+$app->post('/item', 
+          \CorsSlim\CorsSlim::routeMiddleware(), 
+          function ($name) use ($app) {
+            ...
+          }
+        );
+
+?>
+```
 ## License ##
 
   [MIT](LICENSE)
