@@ -20,6 +20,24 @@ class CorsSlim extends \Slim\Middleware {
                                     $req->headers->get("Origin")
                                     );
         }
+
+	    // handle multiple allowed origins
+	    if(is_array($origin)) {
+
+		    $allowedOrigins = $origin;
+
+		    // default to the first allowed origin
+		    $origin = reset($allowedOrigins);
+
+		    // but use a specific origin if there is a match
+		    foreach($allowedOrigins as $allowedOrigin) {
+			    if($allowedOrigin === $req->headers->get("Origin")) {
+				    $origin = $allowedOrigin;
+				    break;
+			    }
+		    }
+	    }
+
         $rsp->headers->set('Access-Control-Allow-Origin', $origin);
     }
 
