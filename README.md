@@ -4,6 +4,7 @@ CorsSlim
 [Cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) (CORS) Middleware for PHP [Slim Framework](http://www.slimframework.com/).
 
 [![Latest Stable Version](https://poser.pugx.org/palanik/corsslim/v/stable.svg)](https://packagist.org/packages/palanik/corsslim)
+[![Build Status](https://travis-ci.org/palanik/CorsSlim.svg)](https://travis-ci.org/palanik/CorsSlim)
 [![License](https://poser.pugx.org/palanik/corsslim/license.svg)](https://github.com/palanik/CorsSlim/blob/master/LICENSE)
 
 ## Usage ##
@@ -55,6 +56,22 @@ You can create the middleware with custom options. Pass options as associative a
 ```php
 $corsOptions = array(
     "origin" => "*",
+    "exposeHeaders" => array("X-My-Custom-Header", "X-Another-Custom-Header"),
+    "maxAge" => 1728000,
+    "allowCredentials" => True,
+    "allowMethods" => array("POST, GET"),
+    "allowHeaders" => array("X-PINGOTHER")
+    );
+$cors = new \CorsSlim\CorsSlim($corsOptions);
+```
+
+## Whitelisted Origins ##
+Set an array of allowed origins to `origin` option. If a matching request origin found it is used.
+
+### Example ###
+```php
+$corsOptions = array(
+    "origin" => array('http://one.allowed-origin.com', 'http://two.allowed-origin.com),
     "exposeHeaders" => array("X-My-Custom-Header", "X-Another-Custom-Header"),
     "maxAge" => 1728000,
     "allowCredentials" => True,
