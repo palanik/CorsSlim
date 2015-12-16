@@ -230,7 +230,7 @@ class CorsSlimRouteTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testDefaultCors() {
-        $app = $this->runApp('cors', 'DefaultCors', []);
+        $app = $this->runApp('cors', 'DefaultCors', array());
         $this->assertEquals("*", $app->response()->header("Access-Control-Allow-Origin"));
     }
 
@@ -270,7 +270,7 @@ class CorsSlimRouteTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testSimpleCorsRequest() {
-        $app = $this->runApp('cors', 'SimpleCorsRequest', []);
+        $app = $this->runApp('cors', 'SimpleCorsRequest', array());
         $this->assertEquals("*", $app->response()->header("Access-Control-Allow-Origin"));
     }
 
@@ -280,7 +280,7 @@ class CorsSlimRouteTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testSimpleCorsRequestHead() {
-        $app = $this->runAppHead('cors', 'SimpleCorsRequestHead', []);
+        $app = $this->runAppHead('cors', 'SimpleCorsRequestHead', array());
         $this->assertEquals("*", $app->response()->header("Access-Control-Allow-Origin"));
     }
 
@@ -290,7 +290,7 @@ class CorsSlimRouteTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testSimpleCorsRequestPost() {
-        $app = $this->runAppPost('cors', 'SimpleCorsRequestPost', []);
+        $app = $this->runAppPost('cors', 'SimpleCorsRequestPost', array());
         $this->assertEquals("*", $app->response()->header("Access-Control-Allow-Origin"));
     }
 
@@ -302,7 +302,7 @@ class CorsSlimRouteTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testComplexCorsRequestPreFlight() {
-        $app = $this->runAppPreFlight('cors', 'ComplexCorsRequestPreFlight', []);
+        $app = $this->runAppPreFlight('cors', 'ComplexCorsRequestPreFlight', array());
         $this->assertEquals(200, $app->response()->status());
         $this->assertEquals("*", $app->response()->header("Access-Control-Allow-Origin"));
     }
