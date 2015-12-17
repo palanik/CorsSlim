@@ -2,7 +2,7 @@
 namespace CorsSlim;
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
-class CorsSlim extends \Slim\Middleware {
+class CorsSlim {
     protected $settings;
 
     public function __construct($settings = array()) {
@@ -91,13 +91,10 @@ class CorsSlim extends \Slim\Middleware {
         }
     }
 
-    protected function setCorsHeaders($app) {
-        $req = $app->request();
-        $rsp = $app->response();
-
+    protected function setCorsHeaders($req, $rsp) {
         // http://www.html5rocks.com/static/images/cors_server_flowchart.png
         // Pre-flight
-        if ($app->request->isOptions()) {
+        if ($req->isOptions()) {
             $this->setOrigin($req, $rsp);
             $this->setMaxAge($req, $rsp);
             $this->setAllowCredentials($req, $rsp);
@@ -111,18 +108,20 @@ class CorsSlim extends \Slim\Middleware {
         }
     }
 
-    public function call() {
-        $this->setCorsHeaders($this->app);
-        if(!$this->app->request->isOptions()) {
-            $this->next->call();
+    public function __invoke($request, $response, $next) {
+        $this->setCorsHeaders($request, $response);
+        if(!$request->isOptions()) {
+            $response = $next($request, $response);
         }
+
+        return $response;
     }
 
     public static function routeMiddleware($settings = array()) {
         $cors = new CorsSlim($settings);
-        return function() use ($cors, $settings) {
-            $app = (array_key_exists('appName', $settings)) ? \Slim\Slim::getInstance($settings['appName']) : \Slim\Slim::getInstance();
-            $cors->setCorsHeaders($app);
+        return function($request, $response, $next) use ($cors, $settings) {
+            $cors->setCorsHeaders($request, $response);
+            return $next($request, $response);
         };
     }
 }
