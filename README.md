@@ -4,7 +4,7 @@ CorsSlim
 [Cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) (CORS) Middleware for PHP [Slim Framework](http://www.slimframework.com/).
 
 [![Latest Stable Version](https://poser.pugx.org/palanik/corsslim/v/stable.svg)](https://packagist.org/packages/palanik/corsslim)
-[![Build Status](https://travis-ci.org/palanik/CorsSlim.svg)](https://travis-ci.org/palanik/CorsSlim)
+[![Build Status](https://travis-ci.org/palanik/CorsSlim.svg?branch=master)](https://travis-ci.org/palanik/CorsSlim)
 [![License](https://poser.pugx.org/palanik/corsslim/license.svg)](https://github.com/palanik/CorsSlim/blob/master/LICENSE)
 
 ## Usage ##
