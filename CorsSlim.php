@@ -17,99 +17,107 @@ class CorsSlim {
         if (is_callable($origin)) {
             // Call origin callback with request origin
             $origin = call_user_func($origin,
-                                    $req->headers->get("Origin")
+                                    $req->getHeader("Origin")
                                     );
         }
 
-	    // handle multiple allowed origins
-	    if(is_array($origin)) {
+        // handle multiple allowed origins
+        if(is_array($origin)) {
 
-		    $allowedOrigins = $origin;
+            $allowedOrigins = $origin;
 
-		    // default to the first allowed origin
-		    $origin = reset($allowedOrigins);
+            $origin = null;
 
-		    // but use a specific origin if there is a match
-		    foreach($allowedOrigins as $allowedOrigin) {
-			    if($allowedOrigin === $req->headers->get("Origin")) {
-				    $origin = $allowedOrigin;
-				    break;
-			    }
-		    }
-	    }
+            // but use a specific origin if there is a match
+            foreach($allowedOrigins as $allowedOrigin) {
+                foreach($req->getHeader("Origin") as $reqOrig) {
+                    if($allowedOrigin === $reqOrig) {
+                        $origin = $allowedOrigin;
+                        break;
+                    }
+                }
+                if (!is_null($origin)) {
+                    break;
+                }
+            }
 
-        $rsp->headers->set('Access-Control-Allow-Origin', $origin);
+            if (is_null($origin)) {
+                // default to the first allowed origin
+                $origin = reset($allowedOrigins);                
+            }
+        }
+
+        return $rsp->withHeader('Access-Control-Allow-Origin', $origin);
     }
 
     protected function setExposeHeaders($req, $rsp) {
         if (isset($this->settings['exposeHeaders'])) {
-            $exposeHeaders = $this->settings['exposeHeaders'];
-            if (is_array($exposeHeaders)) {
-                $exposeHeaders = implode(", ", $exposeHeaders);
-            }
-
-            $rsp->headers->set('Access-Control-Expose-Headers', $exposeHeaders);
+            $rsp = $rsp->withAddedHeader('Access-Control-Expose-Headers', $this->settings['exposeHeaders']);
         }
+
+        return $rsp;
     }
     
     protected function setMaxAge($req, $rsp) {
         if (isset($this->settings['maxAge'])) {
-            $rsp->headers->set('Access-Control-Max-Age', $this->settings['maxAge']);
+            $rsp = $rsp->withHeader('Access-Control-Max-Age', $this->settings['maxAge']);
         }
+
+        return $rsp;
     }
 
     protected function setAllowCredentials($req, $rsp) {
         if (isset($this->settings['allowCredentials']) && $this->settings['allowCredentials'] === True) {
-            $rsp->headers->set('Access-Control-Allow-Credentials', 'true');
+            $rsp = $rsp->withHeader('Access-Control-Allow-Credentials', 'true');
         }
+
+        return $rsp;
     }
 
     protected function setAllowMethods($req, $rsp) {
         if (isset($this->settings['allowMethods'])) {
-            $allowMethods = $this->settings['allowMethods'];
-            if (is_array($allowMethods)) {
-                $allowMethods = implode(", ", $allowMethods);
-            }
-            
-            $rsp->headers->set('Access-Control-Allow-Methods', $allowMethods);
+            $rsp = $rsp->withHeader('Access-Control-Allow-Methods', $this->settings['allowMethods']);
         }
+
+        return $rsp;
     }
 
     protected function setAllowHeaders($req, $rsp) {
         if (isset($this->settings['allowHeaders'])) {
             $allowHeaders = $this->settings['allowHeaders'];
-            if (is_array($allowHeaders)) {
-                $allowHeaders = implode(", ", $allowHeaders);
-            }
         }
         else {  // Otherwise, use request headers
-            $allowHeaders = $req->headers->get("Access-Control-Request-Headers");
+            $allowHeaders = $req->getHeader("Access-Control-Request-Headers");
         }
 
         if (isset($allowHeaders)) {
-            $rsp->headers->set('Access-Control-Allow-Headers', $allowHeaders);
+            $rsp = $rsp->withHeader('Access-Control-Allow-Headers', $allowHeaders);
         }
+
+        return $rsp;
     }
 
     protected function setCorsHeaders($req, $rsp) {
         // http://www.html5rocks.com/static/images/cors_server_flowchart.png
         // Pre-flight
         if ($req->isOptions()) {
-            $this->setOrigin($req, $rsp);
-            $this->setMaxAge($req, $rsp);
-            $this->setAllowCredentials($req, $rsp);
-            $this->setAllowMethods($req, $rsp);
-            $this->setAllowHeaders($req, $rsp);
+            $rsp = $this->setOrigin($req, $rsp);
+            $rsp = $this->setMaxAge($req, $rsp);
+            $rsp = $this->setAllowCredentials($req, $rsp);
+            $rsp = $this->setAllowMethods($req, $rsp);
+            $rsp = $this->setAllowHeaders($req, $rsp);
         }
         else {
-            $this->setOrigin($req, $rsp);
-            $this->setExposeHeaders($req, $rsp);
-            $this->setAllowCredentials($req, $rsp);
+            $rsp = $this->setOrigin($req, $rsp);
+            $rsp = $this->setExposeHeaders($req, $rsp);
+            $rsp = $this->setAllowCredentials($req, $rsp);
         }
+
+        return $rsp;
     }
 
     public function __invoke($request, $response, $next) {
-        $this->setCorsHeaders($request, $response);
+        $response = $this->setCorsHeaders($request, $response);
         if(!$request->isOptions()) {
             $response = $next($request, $response);
         }
@@ -119,10 +127,7 @@ class CorsSlim {
 
     public static function routeMiddleware($settings = array()) {
         $cors = new CorsSlim($settings);
-        return function($request, $response, $next) use ($cors, $settings) {
-            $cors->setCorsHeaders($request, $response);
-            return $next($request, $response);
-        };
+        return $cors;
     }
 }
 ?>
