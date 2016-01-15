@@ -1,10 +1,9 @@
 CorsSlim
 ========
 
-[Cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) (CORS) Middleware for PHP [Slim Framework](http://www.slimframework.com/).
+[Cross-origin resource sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) (CORS) Middleware for PHP [Slim Framework 3](http://www.slimframework.com/).
 
-[![Latest Stable Version](https://poser.pugx.org/palanik/corsslim/v/stable.svg)](https://packagist.org/packages/palanik/corsslim)
-[![Build Status](https://travis-ci.org/palanik/CorsSlim.svg)](https://travis-ci.org/palanik/CorsSlim)
+[![Latest Stable Version](https://poser.pugx.org/palanik/corsslim/v/stable.svg)](https://packagist.org/packages/palanik/corsslim#dev-slim3)
 [![License](https://poser.pugx.org/palanik/corsslim/license.svg)](https://github.com/palanik/CorsSlim/blob/master/LICENSE)
 
 ## Usage ##
@@ -16,7 +15,7 @@ CorsSlim
 ```json
 {
   "require": {
-    "palanik/corsslim": "*"
+    "palanik/corsslim": "dev-slim3"
   }
 }
 ```
@@ -82,8 +81,7 @@ $cors = new \CorsSlim\CorsSlim($corsOptions);
 ```
 
 ## Route Middleware ##
-##### *New* #####
-You can now enable cors selectively for individual routes. 
+You can enable cors selectively for individual routes. 
 
 Use the static method `routeMiddleware` to create and add cors middleware to specific routes.
 
@@ -92,12 +90,11 @@ Use the static method `routeMiddleware` to create and add cors middleware to spe
 require ('./vendor/autoload.php');
 $app = new \Slim\Slim();
 
-$app->get('/item/:id', 
-          \CorsSlim\CorsSlim::routeMiddleware(), 
-          function ($name) use ($app) {
+$app->get('/item/{id}', 
+          function ($request, $response, $args) {
             ...
           }
-        );
+        )->add(\CorsSlim\CorsSlim::routeMiddleware());
 ?>
 ```
 
@@ -108,12 +105,11 @@ require ('./vendor/autoload.php');
 $app = new \Slim\Slim();
 
 $corsOptions = array("origin" => "*");
-$app->get('/item/:id', 
-          \CorsSlim\CorsSlim::routeMiddleware($corsOptions), 
-          function ($name) use ($app) {
+$app->get('/item/{id}', 
+          function ($request, $response, $args) {
             ...
           }
-        );
+        )->add(\CorsSlim\CorsSlim::routeMiddleware($corsOptions));
 
 ?>
 ```
@@ -126,15 +122,13 @@ require ('./vendor/autoload.php');
 $app = new \Slim\Slim();
 
 $app->options('/item', 
-          \CorsSlim\CorsSlim::routeMiddleware(), 
-          function ($name) use ($app) {}
-        );
+          function ($request, $response, $args) {
+        )->add(\CorsSlim\CorsSlim::routeMiddleware());
 $app->post('/item', 
-          \CorsSlim\CorsSlim::routeMiddleware(), 
-          function ($name) use ($app) {
+          function ($request, $response, $args) {
             ...
           }
-        );
+        )->add(\CorsSlim\CorsSlim::routeMiddleware());
 
 ?>
 ```
