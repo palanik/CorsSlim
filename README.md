@@ -71,7 +71,7 @@ Set an array of allowed origins to `origin` option. If a matching request origin
 ### Example ###
 ```php
 $corsOptions = array(
-    "origin" => array('http://one.allowed-origin.com', 'http://two.allowed-origin.com),
+    "origin" => array('http://one.allowed-origin.com', 'http://two.allowed-origin.com'),
     "exposeHeaders" => array("X-My-Custom-Header", "X-Another-Custom-Header"),
     "maxAge" => 1728000,
     "allowCredentials" => True,
